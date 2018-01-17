@@ -111,7 +111,7 @@ click start, then visit the app. Tested only in the most recent Tomcat.
 
 ### Run tests in IntelliJ
 
-They're in the com.example.integration pacakage in the test tree.
+They're in the com.example.integration package in the test tree.
 
 ### Run tests from the command line
 
