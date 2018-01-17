@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Coding Challenge</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    <script src="https://unpkg.com/rxjs/bundles/Rx.min.js"></script>
+    <script src="https://unpkg.com/redux@3.7.2/dist/redux.min.js"></script>
+    <script src="https://unpkg.com/redux-observable@latest/dist/redux-observable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    <script id="root-template" type="text/x-handlebars-template">
+        <div class="tabs panel-tabs">
+            <ul>
+                <li><a onclick="linkToSuppliers()" {{#if nav.onSuppliers}}class="is-active"{{/if}}>Suppliers</a></li>
+                <li><a onclick="linkToTransactions()" {{#if nav.onTransactions}}class="is-active"{{/if}}>Transactions</a></li>
+            </ul>
+        </div>
+        {{> (lookup nav 'page') }}
+    </script>
+    <script id="suppliers-template" type="text/x-handlebars-template">
+        {{#if error }}
+          <div class="notification is-danger">{{ error }}</div>
+        {{/if}}
+        <form>
+            <label for="supplier-name">Name: </label>
+                <input  value="{{ supplierForm.name }}"
+                        id="supplier-name" type="text" name="name" required onchange="formChanged(this.name, this.value)"><br>
+            <label for="supplier-address">Address: </label>
+                <input  value="{{ supplierForm.address }}"
+                        id="supplier-address" name="address" required onchange="formChanged(this.name, this.value)"><br>
+            <label for="supplier-contact">Contact: </label>
+                <input  value="{{ supplierForm.contact }}"
+                        id="supplier-contact" type="text" name="contact" onchange="formChanged(this.name, this.value)"><br><br>
+            <input type="submit" value="Submit" onclick="submitSupplierForm(this.form); return false;">
+        </form>
+        <section class="section">
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Contact</th>
+            </tr>
+            {{#each suppliers}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{address}}</td>
+                <td>{{contact}}</td>
+            </tr>
+            {{/each}}
+        </table>
+        </section>
+    </script>
+    <script id="transactions-template" type="text/x-handlebars-template">
+        <form>
+            <p>Filter by...</p>
+            <select name="filterBy">
+                <option value="id">id</option>
+                <option value="created">created</option>
+                <option value="content">content</option>
+                <option value="supplier_id">supplier_id</option>
+                <option value="supplier_name">supplier_name</option>
+            </select>
+            <input type="text" name="filterTo">
+            <input type="submit" value="Add" onclick="submitFilterForm(this.form); return false;">
+        </form>
+        <p>Or, click on values in the table to add to the filter.</p>
+        <ul>
+            {{#each filters}}
+            {{#if this}}<li class="tag">{{@key}}: {{this}}<a class="delete" onclick="clickFilterDelete('{{@key}}')"></a></li>{{/if}}
+            {{/each}}
+        </ul>
+        <table class="table">
+            <tr>
+                <th id="id">ID</th>
+                <th id="created">Created</th>
+                <th id="content">Content</th>
+                <th id="supplier_id">Supplier ID</th>
+                <th id="supplier_name">Supplier Name</th>
+            </tr>
+            {{#each transactions.transactions}}
+            <tr>
+                <td headers="id" onclick="clickFilter(this)">{{id}}</td>
+                <td headers="created" onclick="clickFilter(this)">{{created}}</td>
+                <td headers="content" onclick="clickFilter(this)">{{content}}</td>
+                <td headers="supplier_id" onclick="clickFilter(this)">{{supplier.id}}</td>
+                <td headers="supplier_name" onclick="clickFilter(this)">{{supplier.name}}</td>
+            </tr>
+            {{/each}}
+        </table>
+        {{#if transactions.next_timestamp}}<a onclick="clickLoadMoreTransactions()">load more...</a>{{/if}}
+    </script>
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <h1 class="title">A Coding Challenge</h1>
+        <div id="everything"></div>
+    </div>
+</section>
+<script src="/app.js"></script>
+</body>
+</html>

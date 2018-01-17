@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TransactionMapper" >
+
+
+    <resultMap id="TransactionResult" type="Transaction">
+        <id property="id" column="id" />
+        <result property="created" column="created" />
+        <result property="content" column="content" />
+        <association property="supplier" javaType="Supplier">
+            <id property="id" column="supplier_id" />
+            <result property="name" column="supplier_name"/>
+            <result property="address" column="supplier_address"/>
+            <result property="contact" column="supplier_contact"/>
+        </association>
+    </resultMap>
+
+    <select id="getTransactions" resultMap="TransactionResult">
+        select
+            transaction.*,
+            supplier.name as supplier_name,
+            supplier.address as supplier_address,
+            supplier.contact as supplier_contact
+        from
+            transaction
+        inner join
+            supplier
+        on
+            transaction.supplier_id = supplier.id
+        order by
+            created desc
+    </select>
+    <select id="getTransaction" resultMap="TransactionResult">
+        select
+            transaction.*,
+            supplier.name as supplier_name,
+            supplier.address as supplier_address,
+            supplier.contact as supplier_contact
+        from
+            transaction
+        inner join
+            supplier
+        on
+            transaction.supplier_id = supplier.id
+        where
+            transaction.id = #{id}
+    </select>
+    <insert id="createTransaction">
+        insert into transaction (
+            id,
+            content,
+            supplier_id
+        ) values (
+            #{id},
+            #{content},
+            #{supplier.id}
+        )
+    </insert>
+    <select id="queryTransactions" resultMap="TransactionResult">
+        select
+            transaction.*,
+            supplier.name as supplier_name,
+            supplier.address as supplier_address,
+            supplier.contact as supplier_contact
+        from
+            transaction
+        inner join
+            supplier
+        on
+            transaction.supplier_id = supplier.id
+        <where>
+            <if test="starting_timestamp != null and starting_id != null">
+                (created = #{starting_timestamp} and transaction.id &gt;= #{starting_id})
+                or created &lt; #{starting_timestamp}
+            </if>
+            <if test="transaction.id != null">
+                and transaction.id = #{transaction.id}
+            </if>
+            <if test="transaction.created != null">
+                and created = #{transaction.created}
+            </if>
+            <if test="transaction.content != null">
+                and content = #{transaction.content}
+            </if>
+            <if test="transaction.supplier != null and transaction.supplier.id != null">
+                and supplier.id = #{transaction.supplier.id}
+            </if>
+            <if test="transaction.supplier != null and transaction.supplier.name != null">
+                and supplier.name = #{transaction.supplier.name}
+            </if>
+        </where>
+        order by created desc, id asc
+        limit #{count}
+    </select>
+
+</mapper>

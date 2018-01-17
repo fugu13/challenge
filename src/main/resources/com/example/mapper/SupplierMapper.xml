@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.SupplierMapper" >
+
+    <select id="getSuppliers" resultType="Supplier">
+        select * from supplier order by name
+    </select>
+    <select id="getSupplier" resultType="Supplier">
+        select * from supplier where id = #{id}
+    </select>
+    <insert id="createSupplier">
+        insert into supplier (
+            id,
+            name,
+            address,
+            contact
+        ) values (
+            #{id},
+            #{name},
+            #{address},
+            #{contact}
+        )
+    </insert>
+    <update id="updateSupplier">
+        update supplier
+        <set>
+            <if test="name != null">name=#{name},</if>
+            <if test="address != null">address=#{address},</if>
+            <if test="contact != null">contact=#{contact}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>
