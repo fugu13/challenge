@@ -106,8 +106,8 @@ Inside the root directory, run `mvn package`, the war will be in the target subd
 
 ### Deploy the WAR
 
-TODO
-
+Copy the war into the webapps folder (perhaps changing the name, if desired). Go to the management interface and
+click start, then visit the app. Tested only in the most recent Tomcat.
 
 ### Run tests in IntelliJ
 
