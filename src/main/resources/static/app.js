@@ -104,7 +104,7 @@ const clearTransactions = () => ({
 const createSupplierEpic = action$ =>
     action$.ofType(CREATE_SUPPLIER)
         .switchMap(action => Rx.Observable.ajax.post(
-            "/supplier",
+            "./supplier",
             action.supplier,
             {
                 'Content-Type': 'application/json'
@@ -129,7 +129,7 @@ const supplierCreatedEpic = action$ =>
 
 const fetchSuppliersEpic = action$ =>
     action$.ofType(FETCH_SUPPLIERS)
-        .switchMap(() => Rx.Observable.ajax.get("/supplier"))
+        .switchMap(() => Rx.Observable.ajax.get("./supplier"))
         .map(response => suppliersReceived(response.response));
 
 
@@ -154,7 +154,7 @@ const paging = (action) => {
 const fetchTransactionsEpic = action$ =>
     action$.ofType(FETCH_TRANSACTIONS)
         .concatMap((action) => Rx.Observable.ajax.post(
-                "/transaction/query" + paging(action),
+                "./transaction/query" + paging(action),
                 structureTransaction(action.filters),
                 {
                     'Content-Type': 'application/json'
