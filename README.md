@@ -119,5 +119,7 @@ Inside the root directory, run `mvn test`.
 
 ### Client
 
-For everything related to the simple client that sends some random transactions, see the entirely separate project TODO
+For everything related to the simple client that sends some random transactions, see the entirely separate project
+https://github.com/fugu13/challenge-client , which does exactly that and nothing more. Instructions for building and
+running the client are in that project's README.
 
